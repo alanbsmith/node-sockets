@@ -1,0 +1,110 @@
+<!doctype html>  
+<html lang="en">  
+    <head>
+      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+    </head>
+    <body>
+      <di class='container'>
+        <div class="jumbotron" id='title'>
+          <h1>Myo WebSockets</h1>
+        </div>
+        <div class='col-xs-6'>
+          <button class='btn btn-default btn-lg btn-block' style='border-radius: 0'>button 1</button>
+          <button class='btn btn-default btn-lg btn-block' style='border-radius: 0'>button 2</button>
+          <button class='btn btn-default btn-lg btn-block' style='border-radius: 0'>button 3</button>
+          <button class='btn btn-default btn-lg btn-block' style='border-radius: 0'>button 4</button>
+          <button class='btn btn-default btn-lg btn-block' style='border-radius: 0'>button 5</button>
+          <button class='btn btn-default btn-lg btn-block' style='border-radius: 0'>button 6</button>
+          <button class='btn btn-default btn-lg btn-block' style='border-radius: 0'>button 7</button>
+          <button class='btn btn-default btn-lg btn-block' style='border-radius: 0'>button 8</button>
+          <button class='btn btn-default btn-lg btn-block' style='border-radius: 0'>button 9</button>
+          <button class='btn btn-default btn-lg btn-block' style='border-radius: 0'>button 10</button>
+          <button class='btn btn-default btn-lg btn-block' style='border-radius: 0'>button 11</button>
+          <button class='btn btn-default btn-lg btn-block' style='border-radius: 0'>button 12</button>
+          <button class='btn btn-default btn-lg btn-block' style='border-radius: 0'>button 13</button>
+          <button class='btn btn-default btn-lg btn-block' style='border-radius: 0'>button 14</button>
+          <button class='btn btn-default btn-lg btn-block' style='border-radius: 0'>button 15</button>
+          <button class='btn btn-default btn-lg btn-block' style='border-radius: 0'>button 16</button>
+          <button class='btn btn-default btn-lg btn-block' style='border-radius: 0'>button 17</button>
+          <button class='btn btn-default btn-lg btn-block' style='border-radius: 0'>button 18</button>
+          <button class='btn btn-default btn-lg btn-block' style='border-radius: 0'>button 19</button>
+          <button class='btn btn-default btn-lg btn-block' style='border-radius: 0'>button 20</button>
+        </div>
+      </div>
+         <script src="/jquery/dist/jquery.js"></script>
+        <script src="/socket.io/socket.io.js"></script>            
+    </body>
+</html>
+<script>  
+    var socket = io.connect('http://localhost:4200');
+    var buttons = $('.btn-lg')
+    var currentButton = buttons.last();
+
+    socket.on('connect', function(data) {
+        socket.emit('join', 'Hello World from client');
+
+    });
+    
+    socket.on('scroll', function(data) {
+      getButton(data);
+    });
+
+    socket.on('select', function(data) {
+      if(currentButton.hasClass('btn-danger')){
+        currentButton.removeClass('btn-danger');
+      } else {
+        currentButton.addClass('btn-danger');
+      }
+    });
+
+    $('form').submit(function(e){
+      event.preventDefault();
+      var message = $('#chat_input').val();
+      socket.emit('messages', message);
+    });
+
+    function getButton(data) {
+      if(data === 'down') {
+        currentButton.removeClass('btn-info');
+        currentButton;
+        currentButton = currentButton.nextWrap();
+        currentButton.addClass('btn-info');
+        if(currentButton.hasClass('btn-danger')){
+          currentButton.addClass('active');
+          currentButton.removeClass('active');
+        }
+      } else {
+        currentButton.removeClass('btn-info');
+        currentButton = currentButton.prevWrap();
+        currentButton.addClass('btn-info');
+        if(currentButton.hasClass('btn-danger')){
+          currentButton.addClass('active');
+          currentButton.removeClass('active');
+        } 
+      }
+    }
+
+    // nextWrap and prevWrap are jQuery plugins
+  (function( $ ) {
+    $.fn.nextWrap = function( selector ) {
+        var $next = $(this).next( selector );
+ 
+        if ( ! $next.length ) {
+            $next = $(this).parent().children( selector ).first();
+        }
+ 
+        return $next;
+    };
+ 
+    $.fn.prevWrap = function( selector ) {
+        var $previous = $(this).prev( selector );
+ 
+        if ( ! $previous.length ) {
+            $previous = $(this).parent().children( selector ).last();
+        }
+ 
+        return $previous;
+    };
+  })( jQuery );
+</script>
